@@ -30,7 +30,7 @@ def extract_links(url, start_url):
     links = set()
     for link in soup.find_all('a'):
         href = link.get('href')
-        if href and (href.startswith(start_url) or href.startswith('/')):
+        if href and (href.startswith(start_url) or href.endswith('.pdf') or href.startswith('/')):
             # Join the URL if it's relative (not absolute link)
             href = urljoin(url, href)
             links.add(href)
@@ -38,8 +38,7 @@ def extract_links(url, start_url):
 
 def download_pdf(url, directory):
     response = requests.get(url)
-    filename = url.split('/')
-    filepath = os.path.join(directory, filename)
+    filepath = os.path.join(directory, url)
     print(f"Downloaded {filepath}.")
     with open(filepath, 'wb') as f:
         f.write(response.content)
@@ -50,7 +49,10 @@ def sanitize_url(url):
     """
     if url.startswith('https://'):
         url = url[8:]
-    url = url[:-1].replace('/', '_') + '.html'
+    if url.endswith('.pdf'):
+        url = url[:-1].replace('/', '_')
+    else:
+        url = url[:-1].replace('/', '_') + '.html'
     return url
 
 def download_html(url, directory):
