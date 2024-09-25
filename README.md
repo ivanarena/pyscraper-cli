@@ -1,6 +1,6 @@
 # pyscraper-cli
 
-A CLI tool to donwload a whole website in one click.
+A CLI tool to download a whole website in one click.
 
 # Requirements
 
